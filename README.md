@@ -1,1 +1,3 @@
-# java-image-gallery
+# A java image gallery manager
+
+Yup.
