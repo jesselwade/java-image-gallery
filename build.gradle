@@ -26,6 +26,10 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+
+    // AWS Library
+    implementation platform('software.amazon.awssdk:bom:2.13.20')
+    implementation 'software.amazon.awssdk:s3'
 }
 
 application {
