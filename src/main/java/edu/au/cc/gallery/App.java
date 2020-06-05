@@ -10,9 +10,10 @@ public class App {
         return "Hello world.";
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws SQLException {
        // System.out.println(new App().getGreeting());
-       DB.demo();
+       UI ui = new UI();
+       ui.getMainMenu();
 
     }
 }

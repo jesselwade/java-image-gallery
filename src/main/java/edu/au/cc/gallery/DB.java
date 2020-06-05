@@ -39,16 +39,16 @@ public class DB {
 			System.exit(1);
 		}
 	}	
-
+	// Use to INSERT or UPDATE 
 	public void execute(String query, String[] values) throws SQLException {
 		PreparedStatement stmt = connection.prepareStatement(query);
 		for (int i=0; i < values.length; i++) {
 			stmt.setString(i+1, values[i]);
 		}
-		stmt.execute();
+		stmt.executeUpdate();
 	}
-
-	public ResultSet execute(String query) throws SQLException {
+	// Use to SELECT where QUERY expects results
+	public ResultSet query(String query) throws SQLException {
 		PreparedStatement stmt = connection.prepareStatement(query);
 		ResultSet rs = stmt.executeQuery();
 		return rs;
@@ -63,7 +63,7 @@ public class DB {
 		db.connect();
 		db.execute("update users set password=? where username=?",
 				new String[] {"monkey", "fred"});
-		ResultSet rs = db.execute("select username,password,full_name from users");
+		ResultSet rs = db.query("select username,password,full_name from users");
 		while (rs.next()) {
 			System.out.println(rs.getString(1)+","+rs.getString(2)+","+rs.getString(3)+"\n");
 		}

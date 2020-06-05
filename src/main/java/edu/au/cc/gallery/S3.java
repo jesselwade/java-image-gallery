@@ -6,11 +6,16 @@ import software.amazon.awssdk.services.s3.model.CreateBucketConfiguration;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.model.GetObjectAclRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectAclResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
 
 public class S3 {
 
 	private static final Region region = Region.US_EAST_2;
 	private S3Client client;
+
 
 	public void connect() {
 		
@@ -42,6 +47,36 @@ public class S3 {
 			.key(key)
 			.build();
 		client.putObject(por, RequestBody.fromString(value));
+	}
+	
+	// Change bucket name
+	public void setCurrentBucket(String bucket, String newBucket) {
+		System.out.println("Not yet implemented.");
+	}
+
+	public String listKeys(String bucketName) {
+
+		ListObjectsRequest lo = ListObjectsRequest.builder()
+			.bucket(bucketName)
+			.build();
+		ListObjectsResponse lr = client.listObjects(lo);
+
+		return lr.toString();		
+	}
+
+	public String showACL(String bucketName, String key) {
+                
+		GetObjectAclRequest gar = GetObjectAclRequest.builder()
+				.bucket(bucketName)
+				.key(key)
+				.build();
+		GetObjectAclResponse gresp = client.getObjectAcl(gar);
+
+		return gresp.toString();
+	}
+
+	public void updateACL(String key) {
+		//TODO
 	}
 
 	public static void demo() {
