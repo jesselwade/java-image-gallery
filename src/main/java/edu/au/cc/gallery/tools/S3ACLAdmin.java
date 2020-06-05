@@ -12,31 +12,32 @@ public class S3ACLAdmin {
 			
 			
 
-	public void setBucket() {
+	public void setBucket(String bucket) {
 		
-		System.out.println("Enter the bucket name to use: ");
-		currentBucket = sc.nextLine();
 		activeBucket = true;
-		System.out.println("Active S3 Bucket: " + currentBucket);
+		this.currentBucket = bucket;
 	}
 
-	public void listKeys() {
+	public String listKeys() {
 		if (!activeBucket) {
-			System.out.println("Set a bucket to use first. (Option 1)");
-		} else {
-			S3 s3 = new S3();
-			s3.connect();
-			System.out.println(s3.listKeys(currentBucket));
+			return "Set a bucket to use first. (Option 1)";
 		}
-	}
 
-	public void showACL() {
+		S3 s3 = new S3();
+		s3.connect();
+		return s3.listKeys(currentBucket);
+		}
+	
+	public String showACL(String key) {
+		if (!activeBucket) {
+			return "Set a bucket to use first. (Option 1)";
+		}
+
 		S3 s3 = new S3();
 		s3.connect();
 
-		System.out.println("Enter a key: ");
-		String key = sc.nextLine();
-		System.out.println(s3.showACL(currentBucket, key).toString());
+		//return s3.showACL(currentBucket, key).toString();
+		return "Not yet implemented.";
 	}
 
 }
