@@ -147,7 +147,11 @@ public class UI {
 	public void bucket(S3ACLAdmin s3a) {
 	
 		String bucketName;
-		bucketName = getInput("What bucket to work with?");
+		bucketName = getInput("What bucket to work with?[press enter for default]");
+		
+		if (bucketName.isEmpty()) {
+			bucketName = "edu.au.cc.jzw.image-gallery";
+		}
 		s3a.setBucket(bucketName);
 	}
 
