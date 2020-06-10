@@ -20,7 +20,9 @@ public static String getSecret() {
 
     
     String secret, decodedBinarySecret;
-    GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest().builder().secretId(secretName).build();
+    GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
+	    .secretId(secretName)
+	    .build();
     GetSecretValueResponse getSecretValueResult = null;
 
     try {
