@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
 public class UserAdmin {
 
         public void addUser(String username, String password, String fullName) throws SQLException {
 
-                DB db = new DB();
-                db.connect();
-                db.execute("insert into users (username, password, full_name) values (?, ?, ?)", new String[] {username, password, fullName});
-                db.close();
+		try {
+                	DB db = new DB();
+                	db.connect();
+                	db.execute("insert into users (username, password, full_name) values (?, ?, ?)", new String[] {username, password, fullName});
+                	db.close();
+		} catch (SQLException e) {
+			System.out.println("User exists.");
+		}
         }
 
         public ArrayList<String> listUsers() throws SQLException {
@@ -30,12 +35,14 @@ public class UserAdmin {
 
         public boolean editUser(String username, String password, String fullName) throws SQLException {
 
-                DB db = new DB();
+             try {   
+		DB db = new DB();
                 db.connect();
                 ResultSet rs = db.query("select * from users where username='"+username+"'");
-                rs.next();
-                if (!username.equals(rs.getString(1))) {
+                
+                if (!rs.isBeforeFirst()) {
                         db.close();
+			System.out.println("User doesn't exist.");
 			return false;
 
                 } else {
@@ -46,7 +53,7 @@ public class UserAdmin {
 
                         }
                         else if (password.isEmpty()) {
-                                db.execute("update users set full_name=? where username=?", new String[] {fullName ,username});
+                                db.execute("update users set full_name=? where username=?", new String[] {fullName, username});
                                 db.close();
 				return true;
                         }
@@ -62,7 +69,10 @@ public class UserAdmin {
 				return true;
                         }
                 }
-
+	     } catch (SQLException e) {
+		System.out.println("Edited info bad.");
+		return false;
+	    }
 
         }
 
