@@ -10,29 +10,30 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class DB {
 	
-	private static final String dbUrl = "jdbc:postgresql://demodb.cpbmo65tqben.us-east-2.rds.amazonaws.com/image_gallery";
+	private static final String dbUrl = "jdbc:postgresql://image-gallery.cpbmo65tqben.us-east-2.rds.amazonaws.com/image_gallery";
 	private Connection connection;
 
-	private String getPassword() {
-		try(BufferedReader br = new BufferedReader(new FileReader("/home/ec2-user/.secretsecret.shh"))) {
-			String result = br.readLine();
-			br.close();
-			return result;
-		}
-		catch (IOException ex) {
-			System.err.println("Error opening password file. Make sure secretsecret.shh exists.");
-			System.exit(1);
-		}
-		return null;
+
+	private JSONObject getSecret() {
+		String s = Secret.getSecret();
+		return new JSONObject(s);
+	}
+
+	private String getPassword(JSONObjct secret) {
+		return secret.getString("password");
 
 	}
 
 	public void connect() throws SQLException {
 		try {
 			Class.forName("org.postgresql.Driver");
-			connection = DriverManager.getConnection(dbUrl, "image_gallery", getPassword());
+			JSONObject secret = getSecret();
+			connection = DriverManager.getConnection(dbUrl, "image_gallery", getPassword(secret));
 		}
 		catch (ClassNotFoundException ex) {
 			ex.printStackTrace();

@@ -30,9 +30,13 @@ dependencies {
     // AWS Library
     implementation platform('software.amazon.awssdk:bom:2.13.20')
     implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:secretsmanager'
 
     // mvn repo
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.12'
+
+    // json
+    implementation group: 'org.json', name: 'json', version: '20200518'
 }
 
 application {
