@@ -1,6 +1,6 @@
 package edu.au.cc.gallery;
 
-import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.regions.Region;
 
 import software.amazon.awssdk.services.secretsmanager.*;
 import software.amazon.awssdk.services.secretsmanager.model.*;
@@ -12,20 +12,15 @@ public class Secret {
 public static String getSecret() {
 
     String secretName = "sec-ig-image_gallery";
-    String region = "us-east-2";
+    Region region = Region.US_EAST_2;
 
     // Create a Secrets Manager client
-    AWSSecretsManager client  = AWSSecretsManagerClientBuilder.standard()
-                                   // .withRegion(region)
-            .region(region)                        
-	    .build();
+    SecretsManagerClient client  = SecretsManagerClient.builder().region(region).build();
     
 
     
     String secret, decodedBinarySecret;
-    GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest().builder()
-                    .secretId(secretName)
-		    .build();
+    GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest().builder().secretId(secretName).build();
     GetSecretValueResponse getSecretValueResult = null;
 
     try {

@@ -24,7 +24,7 @@ public class DB {
 		return new JSONObject(s);
 	}
 
-	private String getPassword(JSONObjct secret) {
+	private String getPassword(JSONObject secret) {
 		return secret.getString("password");
 
 	}
