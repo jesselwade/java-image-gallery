@@ -4,7 +4,11 @@
 package edu.au.cc.gallery;
 
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.HashMap;
 
+import spark.ModelAndView;
+import spark.template.handlebars.HandlebarsTemplateEngine;
 import static spark.Spark.*;
 
 public class App {
@@ -13,7 +17,11 @@ public class App {
     public static void main(String[] args) throws SQLException {
 	port(5000);
 	get("/", (req, res) -> "Hello World");
-	get("/admin", (req, res) -> "Not implemented");
+	get("/admin", (req, res) -> {
+		Map<String, Object> model = new HashMap<String, Object>();
+		return new HandlebarsTemplateEngine().render(new ModelAndView(model, "admin.hbs"));
+		});
+
 	get("/admin/adduser", (req, res) -> "Not implemented");
 	get("/admin/edituser", (req, res) -> "Not implemented");
 	get("/admin/deleteuser", (req, res) -> "Not implemented");
