@@ -5,15 +5,19 @@ package edu.au.cc.gallery;
 
 import java.sql.SQLException;
 
+import static spark.Spark.*;
+
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
+
 
     public static void main(String[] args) throws SQLException {
-       // System.out.println(new App().getGreeting());
-       UI ui = new UI();
-       ui.getMainMenu();
+	port(5000);
+	get("/", (req, res) -> "Hello World");
+	get("/admin", (req, res) -> "Not implemented");
+	get("/admin/adduser", (req, res) -> "Not implemented");
+	get("/admin/edituser", (req, res) -> "Not implemented");
+	get("/admin/deleteuser", (req, res) -> "Not implemented");
+	get("/admin/createuser", (req, res) -> "Not implemented");
 
     }
 }
