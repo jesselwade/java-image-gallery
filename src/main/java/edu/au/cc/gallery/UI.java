@@ -61,7 +61,7 @@ public class UI {
 
 	public void list() throws SQLException {
 		ArrayList<String> al = new ArrayList<>();
-		al = ua.listUsers();
+		al = ua.listUsersTable();
 		System.out.println("username\tpassword\tfull name");
 		System.out.println("-----------------------------");
 		al.forEach((s) -> System.out.println(s));

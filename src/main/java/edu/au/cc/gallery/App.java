@@ -6,6 +6,7 @@ package edu.au.cc.gallery;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -15,17 +16,48 @@ public class App {
 
 
     public static void main(String[] args) throws SQLException {
+	
 	port(5000);
-	get("/", (req, res) -> "Hello World");
+	
 	get("/admin", (req, res) -> {
 		Map<String, Object> model = new HashMap<String, Object>();
+		ArrayList<String> al = new ArrayList();
+		ArrayList<Map> alusers = new ArrayList();
+		UserAdmin ua = new UserAdmin();
+		al = ua.listUsersNames();
+		
+		al.forEach((i) -> {
+					Map<String, Object> temp = new HashMap<String, Object>();
+					temp.put("username", i);
+					alusers.add(temp);
+				  });
+		model.put("users", alusers);
 		return new HandlebarsTemplateEngine().render(new ModelAndView(model, "admin.hbs"));
 		});
 
-	get("/admin/adduser", (req, res) -> "Not implemented");
-	get("/admin/edituser", (req, res) -> "Not implemented");
-	get("/admin/deleteuser", (req, res) -> "Not implemented");
-	get("/admin/createuser", (req, res) -> "Not implemented");
+	get("/admin/edituser", (req, res) -> {
+                Map<String, Object> model = new HashMap<String, Object>();
+		model.put("name", req.queryParams("name"));
+                return new HandlebarsTemplateEngine().render(new ModelAndView(model, "edit.hbs"));
+                });
+
+	get("/admin/deleteuser", (req, res) -> {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("name", req.queryParams("name"));
+                return new HandlebarsTemplateEngine().render(new ModelAndView(model, "delete.hbs"));
+                });
+
+        get("/admin/deleted", (req, res) -> {
+                Map<String, Object> model = new HashMap<String, Object>();
+                return new HandlebarsTemplateEngine().render(new ModelAndView(model, "deleted.hbs"));
+                });
+
+
+	get("/admin/createuser", (req, res) -> {
+		Map<String, Object> model = new HashMap<String, Object>();
+                return new HandlebarsTemplateEngine().render(new ModelAndView(model, "create.hbs"));
+                });
+
 
     }
 }

@@ -1,12 +1,15 @@
-<!DOCTYPE html>
-<html>
-	<head>
-	<title>Admin Panel</title>
-	<meta charset="utf-8" />
-	</head>
-	<body>
-		<h1>Admin Panel</h1>
-		<p> Do stuff. </p>
-	</body>
-	</html>
+{{#partial "content"}}
+<p>User List</p>
 
+{{#users}}
+
+<a href="/admin/edituser?name={{username}}">{{username}}</a><br>
+
+{{/users}}
+
+<br>
+<button onclick="location.href='/admin/createuser'" type="button">Create New User</button><br>
+<br>
+{{/partial}}
+
+{{> base.hbs}}

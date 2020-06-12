@@ -19,7 +19,7 @@ public class UserAdmin {
 		}
         }
 
-        public ArrayList<String> listUsers() throws SQLException {
+        public ArrayList<String> listUsersTable() throws SQLException {
 		ArrayList<String> al = new ArrayList<>();
                 DB db = new DB();
                 db.connect();
@@ -32,6 +32,21 @@ public class UserAdmin {
 		return al;
 
         }
+
+	        public ArrayList<String> listUsersNames() throws SQLException {
+                ArrayList<String> al = new ArrayList<>();
+                DB db = new DB();
+                db.connect();
+                ResultSet rs = db.query("select * from users");
+
+                while (rs.next()) {
+                        al.add(rs.getString(1));
+                }
+
+                return al;
+
+        }
+
 
         public boolean editUser(String username, String password, String fullName) throws SQLException {
 
