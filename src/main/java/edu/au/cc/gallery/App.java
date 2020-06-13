@@ -41,6 +41,21 @@ public class App {
                 return new HandlebarsTemplateEngine().render(new ModelAndView(model, "edit.hbs"));
                 });
 
+        get("/admin/edited", (req, res) -> {
+                UserAdmin ua = new UserAdmin();
+                Map<String, Object> model = new HashMap<String, Object>();
+
+		if (req.queryParams("name").equals("")) {
+			return new HandlebarsTemplateEngine().render(new ModelAndView(model, "inputoops.hbs"));
+                }
+
+		boolean success = ua.editUser(req.queryParams("name"), req.queryParams("password"), req.queryParams("fullName"));
+		model.put("name", req.queryParams("name"));
+
+		return new HandlebarsTemplateEngine().render(new ModelAndView(model, "edited.hbs"));
+                });
+
+
 	get("/admin/deleteuser", (req, res) -> {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("name", req.queryParams("name"));
@@ -48,16 +63,45 @@ public class App {
                 });
 
         get("/admin/deleted", (req, res) -> {
-                Map<String, Object> model = new HashMap<String, Object>();
-                return new HandlebarsTemplateEngine().render(new ModelAndView(model, "deleted.hbs"));
+                UserAdmin ua = new UserAdmin();
+		Map<String, Object> model = new HashMap<String, Object>();
+
+		if (req.queryParams("name").equals("")) {
+                        return new HandlebarsTemplateEngine().render(new ModelAndView(model, "inputoops.hbs"));
+                }
+
+		ua.deleteUser(req.queryParams("name"));
+		model.put("name", req.queryParams("name"));
+
+		return new HandlebarsTemplateEngine().render(new ModelAndView(model, "deleted.hbs"));
                 });
 
 
 	get("/admin/createuser", (req, res) -> {
 		Map<String, Object> model = new HashMap<String, Object>();
-                return new HandlebarsTemplateEngine().render(new ModelAndView(model, "create.hbs"));
+		return new HandlebarsTemplateEngine().render(new ModelAndView(model, "create.hbs"));
                 });
 
+        get("/admin/created", (req, res) -> {
+	
+		UserAdmin ua = new UserAdmin();
+		Map<String, Object> model = new HashMap<String, Object>();
+	
+                if (req.queryParams("name").equals("")) {
+                	return new HandlebarsTemplateEngine().render(new ModelAndView(model, "inputoops.hbs"));
+                }
+
+		ua.addUser(req.queryParams("name"), req.queryParams("password"), req.queryParams("fullName"));
+		model.put("name", req.queryParams("name"));
+
+                return new HandlebarsTemplateEngine().render(new ModelAndView(model, "created.hbs"));
+                });
+
+
+        get("/admin/inputoops", (req, res) -> {
+                Map<String, Object> model = new HashMap<String, Object>();
+                return new HandlebarsTemplateEngine().render(new ModelAndView(model, "inputoops.hbs"));
+                });
 
     }
 }

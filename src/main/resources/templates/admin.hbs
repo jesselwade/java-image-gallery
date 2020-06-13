@@ -1,12 +1,12 @@
 {{#partial "content"}}
 <p>User List</p>
-
+<ol>
 {{#users}}
 
-<a href="/admin/edituser?name={{username}}">{{username}}</a><br>
+<li><a href="/admin/edituser?name={{username}}">{{username}}</a> <a href="/admin/deleteuser?name={{username}}"> delete</a></li>
 
 {{/users}}
-
+</ol>
 <br>
 <button onclick="location.href='/admin/createuser'" type="button">Create New User</button><br>
 <br>

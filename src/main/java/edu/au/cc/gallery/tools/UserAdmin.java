@@ -61,10 +61,10 @@ public class UserAdmin {
 			return false;
 
                 } else {
-			// no update necessary
-                        if (password.isEmpty() & fullName.isEmpty()) {
+			// no update necessary so return true
+                        if (password.isEmpty() && fullName.isEmpty()) {
 
-                                return false;
+                                return true;
 
                         }
                         else if (password.isEmpty()) {
@@ -79,7 +79,7 @@ public class UserAdmin {
 				return true;
                         } else {
 
-                                db.execute("update users set password=?, full_name=?, where username=?", new String[] {password, fullName, username});
+                                db.execute("update users set password=? , full_name=? where username=?", new String[] {password, fullName, username});
                                 db.close();
 				return true;
                         }
