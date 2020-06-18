@@ -17,7 +17,13 @@ public class App {
 
     public static void main(String[] args) throws SQLException {
 	
-	port(5000);
+	String portString = System.getenv("JETTY_PORT");
+	
+	if (portString == null || portString.equals("")) {	
+		port(5000);
+	} else {
+		port(Integer.parseInt(portString));
+	}
 	
 	get("/admin", (req, res) -> {
 		Map<String, Object> model = new HashMap<String, Object>();
