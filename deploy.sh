@@ -7,7 +7,7 @@ if [ "$#" != "1" ]; then
 fi
 
 cd ec2-scripts
-rm -f ec2-prod-latest.sh
+rm -f ec2-*-latest.sh
 ln -s ec2-prod-$1.sh ec2-prod-latest.sh
 ln -s ec2-nginx-$1.sh ec2-nginx-latest.sh
 cd ..
