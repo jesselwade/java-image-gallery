@@ -16,4 +16,5 @@ chown -R ec2-user:ec2-user java-image-gallery
 systemctl stop postfix
 systemctl disable postfix
 
-su ec2-user -l -c 'cd ~/java-image-gallery && ./start' >/var/log/image_gallery.log 2>&1 &
+su ec2-user -l -c 'source "/home/ec2-user/.sdkman/bin/sdkman-init.sh"'
+su ec2-user -l -c 'cd ~/java-image-gallery && ./start.sh' >/var/log/image_gallery.log 2>&1 &
