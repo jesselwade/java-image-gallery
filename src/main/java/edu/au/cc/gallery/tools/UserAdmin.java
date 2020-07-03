@@ -100,4 +100,16 @@ public class UserAdmin {
               db.execute("delete from users where username=?", new String[] {username});
               db.close();
         }
+
+	public void checkAdmin(Request req, Response resp) {
+	
+		if (!isAdmin(req.session().attribute("user"))) {
+			resp.redirect("/login");
+			halt();
+		}
+	}
+
+	public boolean isAdmin(String username) {
+		return username != null && username.equals("fred");
+	}
 }

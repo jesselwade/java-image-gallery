@@ -32,14 +32,17 @@ public class Auth {
 		try {
 			String username = req.queryParams("username");
 			User u = Postgres.getUserDAO().getUserByUsername(username);
-			if (u == null || !u.getPassword().equals(req.queryMap().get("password")))
+			if (u == null || !u.getPassword().equals(req.queryParams("password"))) {
+				System.out.println("invalid username or password. "+u);
 				resp.redirect("/login");
+				return "";
+			}
 			req.session().attribute("user", username);
 			resp.redirect("/");
+			return "";
 		} catch (Exception ex) {
 			return "Error: "+ex.getMessage();
 		}
-		return "";
 	}
 
 	public static boolean isSessionValid(Request req, Response resp) {

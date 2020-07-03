@@ -45,7 +45,7 @@ public class App {
 	post("/login", (req, res) -> Auth.login(req, res));
 
         get("/", (req, res) -> {
-		if (!Auth.isSessionValid(req, res)) {
+		if (req.session().isNew()) {
 			res.redirect("/login");
 		}
                 Map<String, Object> model = new HashMap<String, Object>();
@@ -67,7 +67,11 @@ public class App {
                 return new HandlebarsTemplateEngine().render(new ModelAndView(model, "upload.hbs"));
                 });
 
-	
+	before("/admin/*", (request, response) -> {
+		UserAdmin ua = new UserAdmin();
+		ua.checkAdmin(request, response);
+		});
+
 	get("/admin", (req, res) -> {
 		Map<String, Object> model = new HashMap<String, Object>();
 		ArrayList<String> al = new ArrayList();
