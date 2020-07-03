@@ -1,9 +1,11 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.tools;
 
 import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import edu.au.cc.gallery.data.DB;
+import edu.au.cc.gallery.aws.S3;
 
 public class UserAdmin {
 

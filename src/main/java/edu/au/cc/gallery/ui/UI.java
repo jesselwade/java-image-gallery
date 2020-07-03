@@ -1,10 +1,13 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.ui;
 
 import java.util.Scanner;
 import java.sql.SQLException;
 import java.lang.NumberFormatException;
 import java.util.InputMismatchException;
 import java.util.ArrayList;
+
+import edu.au.cc.gallery.tools.UserAdmin;
+import edu.au.cc.gallery.tools.S3ACLAdmin;
 
 public class UI {
 

@@ -1,4 +1,4 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.data;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,9 +13,12 @@ import java.sql.ResultSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import edu.au.cc.gallery.aws.Secret;
+
 public class DB {
 	
-	private static final String dbUrl = "jdbc:postgresql://image-gallery.cpbmo65tqben.us-east-2.rds.amazonaws.com/image_gallery";
+//	private static final String dbUrl = "jdbc:postgresql://image-gallery.cpbmo65tqben.us-east-2.rds.amazonaws.com/image_gallery";
+	private static final String dbUrl = "jdbc:postgresql://localhost/image_gallery";
 	private Connection connection;
 
 
@@ -54,6 +57,16 @@ public class DB {
 		ResultSet rs = stmt.executeQuery();
 		return rs;
 	}
+
+        // Use to SELECT with protected values
+        public ResultSet query(String query, String[] values) throws SQLException {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                for (int i=0; i < values.length; i++) {
+                        stmt.setString(i+1, values[i]);
+                }
+               return  stmt.executeQuery();
+        }
+
 
 	public void close() throws SQLException {
 		connection.close();

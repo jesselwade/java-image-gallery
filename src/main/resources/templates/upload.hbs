@@ -1,0 +1,18 @@
+{{#partial "content"}}
+<p>Upload Images</p>
+<form method="POST" action="/upload">
+	<table>
+	<tr>
+		<td align="center"><b>Select an image to upload</b> </td>
+	</tr>
+        <tr>
+                <td align="right"><label for="file">File:</label></td>
+                <td align="left"><input type="file" id="img" name="img" accept="image/*"></td>
+        </tr>
+	</table>
+	<input type="submit" value="Upload"><br>
+</form><br>
+<br>
+{{/partial}}
+
+{{> base.hbs}}

@@ -1,8 +1,10 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.tools;
 
 import java.util.Scanner;
 import java.sql.ResultSet;
 import java.util.InputMismatchException;
+
+import edu.au.cc.gallery.aws.S3;
 
 public class S3ACLAdmin {
 
