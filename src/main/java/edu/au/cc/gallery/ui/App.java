@@ -7,11 +7,16 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.io.*;
+import java.nio.file.*;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletException;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import static spark.Spark.*;
-
+import spark.Request;
+import spark.Response;
 
 import edu.au.cc.gallery.data.Postgres;
 import edu.au.cc.gallery.data.UserDAO;
@@ -27,7 +32,11 @@ public class App {
 
 
     public static void main(String[] args) throws SQLException {
-	
+
+	File uploadDir = new File("upload");
+        uploadDir.mkdir();	
+	staticFiles.externalLocation("upload");
+		
 	String portString = System.getenv("JETTY_PORT");
 	
 	if (portString == null || portString.equals("")) {	
@@ -66,6 +75,8 @@ public class App {
                 //model.put("name", req.queryParams("name"));
                 return new HandlebarsTemplateEngine().render(new ModelAndView(model, "upload.hbs"));
                 });
+
+	post("/images/upload", (req, res) -> upload(req, res));
 
 	before("/admin/*", (request, response) -> {
 		UserAdmin ua = new UserAdmin();
@@ -161,4 +172,33 @@ public class App {
 	get("/debugSession", (req, res) -> Auth.debugSession(req, res));
 
     }
+
+    public static Response upload(Request req, Response res) {
+
+	    try {
+		    File uploadDir = new File("upload");
+
+	    	    uploadDir.mkdir();
+
+            	    staticFiles.externalLocation("upload");
+
+	    	    Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
+
+	            req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+	    	    InputStream input = req.raw().getPart("img_file").getInputStream();
+
+		    Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+	    } catch (IOException ex) {
+		    System.out.println(ex.getMessage());
+            } catch (ServletException ex) {
+                    System.out.println(ex.getMessage());
+            }
+
+	    // get User session
+	    // add Image object
+	    // pass file to S3
+	    return null;
+    };
 }

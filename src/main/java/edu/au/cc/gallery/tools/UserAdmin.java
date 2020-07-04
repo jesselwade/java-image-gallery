@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import spark.Request;
+import spark.Response;
+import static spark.Spark.*;
+
 import edu.au.cc.gallery.data.DB;
 import edu.au.cc.gallery.aws.S3;
 

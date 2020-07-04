@@ -1,13 +1,13 @@
 {{#partial "content"}}
 <p>Upload Images</p>
-<form method="POST" action="/upload">
+<form method="POST" enctype='multipart/form-data'>
 	<table>
 	<tr>
 		<td align="center"><b>Select an image to upload</b> </td>
-                <td align="left"><input type="file" id="img" name="img" accept="image/*"></td>
+                <td align="left"><input type="file" id="img" name="img_file" accept="image/*"></td>
         </tr>
 	</table>
-	<input type="submit" value="Upload"><br>
+	<input type="submit" value="Upload Image"><br>
 </form><br>
 <br>
 {{/partial}}
