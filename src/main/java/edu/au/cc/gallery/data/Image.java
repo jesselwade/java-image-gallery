@@ -1,13 +1,12 @@
 package edu.au.cc.gallery.data;
 
+import java.nio.ByteBuffer;
+
 public class Image {
 
-	private String path;
 	private int s3id;
 	private String filename;
-	private int size;
-	private int[] dimensions[];
-
+	private ByteBuffer data;
 
 	public Image(int s3id, String filename) {
 		this.s3id = s3id;
@@ -19,6 +18,9 @@ public class Image {
 
 	public String getFilename() { return filename; }
 	public void setFilename(String f) { filename = f; }
+
+	public ByteBuffer getData() { return data; }
+	public void setData(ByteBuffer b) { data = b; }
 
 	@Override
 	public String toString() {

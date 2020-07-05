@@ -3,8 +3,12 @@ package edu.au.cc.gallery.data;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.nio.ByteBuffer;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import edu.au.cc.gallery.aws.S3;
 
 public class PostgresImageDAO implements ImageDAO {
 
@@ -27,7 +31,13 @@ public class PostgresImageDAO implements ImageDAO {
 	}
 
 	public void addImage(Image i) throws SQLException {
-		
+		String id = String.valueOf(i.getS3id());
+		String path = i.getFilename();
+		connection.execute("insert into images(s3id, path) values(cast(? as integer),?)", new String[] {id, path});
+
+		S3 s3 = new S3();
+		s3.connect();
+		s3.putObject(id + "/" + path, i.getData());
 
 	}
 

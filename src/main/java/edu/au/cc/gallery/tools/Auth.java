@@ -38,7 +38,7 @@ public class Auth {
 				return "";
 			}
 			req.session().attribute("user", username);
-			resp.redirect("/");
+			resp.redirect("/images/home");
 			return "";
 		} catch (Exception ex) {
 			return "Error: "+ex.getMessage();

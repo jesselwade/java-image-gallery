@@ -105,6 +105,15 @@ public class UserAdmin {
               db.close();
         }
 
+        public void checkUser(Request req, Response resp) {
+
+                if (req.session().attribute("user") == null) {
+                        resp.redirect("/login");
+                        halt();
+                }
+        }
+
+
 	public void checkAdmin(Request req, Response resp) {
 	
 		if (!isAdmin(req.session().attribute("user"))) {

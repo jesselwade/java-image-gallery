@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.file.*;
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
 import javax.servlet.ServletException;
 
 import spark.ModelAndView;
@@ -18,8 +20,12 @@ import static spark.Spark.*;
 import spark.Request;
 import spark.Response;
 
+import edu.au.cc.gallery.aws.S3;
 import edu.au.cc.gallery.data.Postgres;
 import edu.au.cc.gallery.data.UserDAO;
+import edu.au.cc.gallery.data.User;
+import edu.au.cc.gallery.data.ImageDAO;
+import edu.au.cc.gallery.data.Image;
 import edu.au.cc.gallery.tools.UserAdmin;
 import edu.au.cc.gallery.tools.Auth;
 
@@ -29,6 +35,11 @@ public class App {
     private static UserDAO getUserDAO() throws SQLException {
         return Postgres.getUserDAO();
     }
+
+    private static ImageDAO getImageDAO() throws SQLException {
+        return Postgres.getImageDAO();
+    }
+
 
 
     public static void main(String[] args) throws SQLException {
@@ -45,6 +56,9 @@ public class App {
 		port(Integer.parseInt(portString));
 	}
 
+	staticFiles.location("/public");
+
+	redirect.get("/", "/login");
 
         get("/login", (req, res) -> {
                 Map<String, Object> model = new HashMap<String, Object>();
@@ -53,10 +67,7 @@ public class App {
 
 	post("/login", (req, res) -> Auth.login(req, res));
 
-        get("/", (req, res) -> {
-		if (req.session().isNew()) {
-			res.redirect("/login");
-		}
+        get("/images/home", (req, res) -> {
                 Map<String, Object> model = new HashMap<String, Object>();
                 //model.put("name", req.queryParams("name"));
                 return new HandlebarsTemplateEngine().render(new ModelAndView(model, "home.hbs"));
@@ -64,7 +75,7 @@ public class App {
 
 	get("/logout", (req, res) -> Auth.logout(req, res));
 
-        get("/images", (req, res) -> {
+        get("/images/list", (req, res) -> {
                 Map<String, Object> model = new HashMap<String, Object>();
 		//model.put("name", req.queryParams("name"));
                 return new HandlebarsTemplateEngine().render(new ModelAndView(model, "images.hbs"));
@@ -76,12 +87,47 @@ public class App {
                 return new HandlebarsTemplateEngine().render(new ModelAndView(model, "upload.hbs"));
                 });
 
-	post("/images/upload", (req, res) -> upload(req, res));
+	post("/images/upload", (req, res) -> {
+		Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
 
-	before("/admin/*", (request, response) -> {
+                req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+                try (InputStream input = req.raw().getPart("img_file").getInputStream()) {
+			byte[] bytes = input.readAllBytes();
+
+	               // Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+		
+		logInfo(req, tempFile);
+
+		String username = req.session().attribute("user");
+		User u = getUserDAO().getUserByUsername(username);
+		Image img = new Image(u.getS3id(), getFileName(req.raw().getPart("img_file")));
+	        img.setData(ByteBuffer.wrap(bytes));
+
+		getImageDAO().addImage(img);
+		//S3 s3 = new S3();
+		//s3.connect();
+		//s3.putObject(String.valueOf(u.getS3id())+"/"+getFileName(req.raw().getPart("img_file")), ByteBuffer.wrap(bytes));
+		}
+		res.redirect("/images/home");
+		return "";
+	});
+
+        before("/images/*", (request, response) -> {
+                UserAdmin ua = new UserAdmin();
+                ua.checkUser(request, response);
+                });
+
+	before("/admin", (request, response) -> {
 		UserAdmin ua = new UserAdmin();
 		ua.checkAdmin(request, response);
 		});
+
+        before("/admin/*", (request, response) -> {
+                UserAdmin ua = new UserAdmin();
+                ua.checkAdmin(request, response);
+                });
+
 
 	get("/admin", (req, res) -> {
 		Map<String, Object> model = new HashMap<String, Object>();
@@ -173,32 +219,18 @@ public class App {
 
     }
 
-    public static Response upload(Request req, Response res) {
+    private static void logInfo(Request req, Path tempFile) throws IOException, ServletException {
+	    System.out.println("Uploaded: " +getFileName(req.raw().getPart("img_file")) + "'saved as '" + tempFile.toAbsolutePath() + "'");
 
-	    try {
-		    File uploadDir = new File("upload");
+    }
 
-	    	    uploadDir.mkdir();
+    private static String getFileName(Part part) {
+	for (String cd : part.getHeader("content-disposition").split(";")) {
+		if (cd.trim().startsWith("filename")) {
+			return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+		}
+	}
+	return null;
 
-            	    staticFiles.externalLocation("upload");
-
-	    	    Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
-
-	            req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-
-	    	    InputStream input = req.raw().getPart("img_file").getInputStream();
-
-		    Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
-
-	    } catch (IOException ex) {
-		    System.out.println(ex.getMessage());
-            } catch (ServletException ex) {
-                    System.out.println(ex.getMessage());
-            }
-
-	    // get User session
-	    // add Image object
-	    // pass file to S3
-	    return null;
-    };
+    }
 }

@@ -5,17 +5,22 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketConfiguration;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.model.GetObjectAclRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectAclResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
 
+import java.nio.ByteBuffer;
+import java.nio.file.Paths;
+
 public class S3 {
 
 	private static final Region region = Region.US_EAST_2;
 	private S3Client client;
-
+	private String bucketName = "edu.au.cc.jzw.image-gallery";
 
 	public void connect() {
 		
@@ -40,18 +45,18 @@ public class S3 {
 	}
 
 
-	public void putObject(String bucketName, String key, String value) {
+	public void putObject(String key, ByteBuffer buffer) {
 		
 		PutObjectRequest por = PutObjectRequest.builder()
-			.bucket(bucketName)
+			.bucket(this.bucketName)
 			.key(key)
 			.build();
-		client.putObject(por, RequestBody.fromString(value));
+		client.putObject(por, RequestBody.fromByteBuffer(buffer));
 	}
 	
 	// Change bucket name
-	public void setCurrentBucket(String bucket, String newBucket) {
-		System.out.println("Not yet implemented.");
+	public void setBucketName(String bucket) {
+		bucketName = bucket;
 	}
 
 	public String listKeys(String bucketName) {
@@ -84,7 +89,7 @@ public class S3 {
 		S3 s3 = new S3();
 		s3.connect();
 		//s3.createBucket(bucketName, region);
-		s3.putObject(bucketName, "banana", "yellow");
+		
 
 	}
 }
