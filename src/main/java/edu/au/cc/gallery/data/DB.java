@@ -18,7 +18,7 @@ import edu.au.cc.gallery.aws.Secret;
 public class DB {
 	
 //	private static final String dbUrl = "jdbc:postgresql://image-gallery.cpbmo65tqben.us-east-2.rds.amazonaws.com/image_gallery";
-	private static final String dbUrl = "jdbc:postgresql://localhost/image_gallery";
+	private static final String dbUrl = "jdbc:postgresql://172.17.0.2/image_gallery";
 	private Connection connection;
 
 
