@@ -1,13 +1,13 @@
 {{#partial "content"}}
 <p>Image List</p>
-<ol>
+<ul>
 {{#images}}
 
-<li><a href="/images/list/showimg?image={{image}}">{{image-name}}</a></li>
+<li><a target="_blank" href="https://s3.us-east-2.amazonaws.com/edu.au.cc.jzw.image-gallery/{{image}}"><img src="https://s3.us-east-2.amazonaws.com/edu.au.cc.jzw.image-gallery/{{image}}" alt={{ filename }}</a></li>
 
 {{/images}}
-</ol>
+</ul>
 <br>
 {{/partial}}
 
-{{> base.hbs}}
+{{> imagebase.hbs}}

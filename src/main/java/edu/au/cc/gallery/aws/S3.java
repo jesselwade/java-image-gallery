@@ -50,6 +50,7 @@ public class S3 {
 		PutObjectRequest por = PutObjectRequest.builder()
 			.bucket(this.bucketName)
 			.key(key)
+			.acl("public-read")
 			.build();
 		client.putObject(por, RequestBody.fromByteBuffer(buffer));
 	}

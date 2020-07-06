@@ -6,6 +6,7 @@ package edu.au.cc.gallery.ui;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -77,7 +78,18 @@ public class App {
 
         get("/images/list", (req, res) -> {
                 Map<String, Object> model = new HashMap<String, Object>();
-		//model.put("name", req.queryParams("name"));
+                ArrayList<Map> alimages = new ArrayList();
+                User u = getUserDAO().getUserByUsername(req.session().attribute("user"));
+                List<Image> il = getImageDAO().getImages(u);
+
+                il.forEach((i) -> {
+                                        Map<String, Object> temp = new HashMap<String, Object>();
+                                        temp.put("image", i.toString());
+					temp.put("filename", i.getFilename());
+                                        alimages.add(temp);
+                                  });
+                model.put("images", alimages);
+
                 return new HandlebarsTemplateEngine().render(new ModelAndView(model, "images.hbs"));
                 });
 

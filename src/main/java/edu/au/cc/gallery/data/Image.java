@@ -24,7 +24,6 @@ public class Image {
 
 	@Override
 	public String toString() {
-		return "S3 owner id: " + s3id + "\n" +
-		       "Filename: " + filename + "\n";
+		return s3id + "/" + filename;
 	}
 }

@@ -20,9 +20,9 @@ public class PostgresImageDAO implements ImageDAO {
 		connection.connect();
 	}
 
-	public List<Image> getImages(User u) throws Exception {
+	public List<Image> getImages(User u) throws SQLException {
 		List<Image> result = new ArrayList<Image>();
-		ResultSet rs = connection.query("select * from images where s3id=?", new String[] {String.valueOf(u.getS3id())});
+		ResultSet rs = connection.query("select * from images where s3id=(cast(? as integer))", new String[] {String.valueOf(u.getS3id())});
 		while(rs.next()) {
 			result.add(new Image(rs.getInt(2), rs.getString(3))); 
 		}
